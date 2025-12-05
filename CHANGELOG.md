@@ -1,47 +1,47 @@
-# Changelog | [中文版本](CHANGELOG_ZH.md)
+# 版本更迭说明 | [English Version](CHANGELOG.md)
 
-## v1.0.0 – Initial Web Release
+## v1.0.0 – 初始网页版发布
 
-### Feature 1: Browser-Based Processing
-- **Summary**: Perform all merging operations directly in the browser using WebAssembly.
-- **Problem Solved**: Removes the need for users to install FFmpeg, Python, or download suspicious EXE files. No data is uploaded to any server.
-- **Feature Details**:
-  - Leverages `@ffmpeg/ffmpeg` (WASM) to run a full FFmpeg instance inside the browser.
-  - Supports "Copy Codec" operations for extremely fast merging without re-encoding.
-- **Technical Implementation**:
-  - `ffmpegService.ts` handles the loading of `ffmpeg-core.js` and `ffmpeg.wasm`.
-  - Implements a queue-based or stage-based progression system to manage multi-step FFmpeg commands (concat video -> concat audio -> merge).
-  - Uses `SharedArrayBuffer` for high-performance memory sharing (requires COOP/COEP headers).
+### 特性 1: 纯浏览器端处理
+- **总结**: 利用 WebAssembly 技术，直接在浏览器中执行所有合并操作。
+- **解决痛点**: 用户无需安装 Python、FFmpeg 或下载不安全的 EXE 文件。所有数据均在本地处理，不会上传到任何服务器。
+- **功能细节**:
+  - 利用 `@ffmpeg/ffmpeg` (WASM) 在浏览器内部运行完整的 FFmpeg 实例。
+  - 支持“复制编码 (Copy Codec)”模式，无需重新编码即可极速合并。
+- **技术实现**:
+  - `ffmpegService.ts` 负责加载 `ffmpeg-core.js` 和 `ffmpeg.wasm`。
+  - 实现了基于队列或阶段的进度系统，管理多步骤 FFmpeg 命令（合并视频 -> 合并音频 -> 混流）。
+  - 使用 `SharedArrayBuffer` 实现高性能内存共享（需要配置 COOP/COEP 响应头）。
 
-### Feature 2: Modern Dark SaaS UI
-- **Summary**: A clean, professional user interface featuring glassmorphism, dynamic theming, and smooth animations.
-- **Problem Solved**: Traditional open-source tools often look outdated or "engineer-centric." This provides a consumer-grade UX.
-- **Feature Details**:
-  - **Glassmorphism**: Translucent cards with `backdrop-blur` effects.
-  - **Dynamic Theming**: Supports Light, Dark, and System (Auto) modes with instant switching.
-  - **Responsive**: Fully responsive layout that works on different screen sizes.
-- **Technical Implementation**:
-  - Built with **React** and **Tailwind CSS**.
-  - Uses CSS variables and Tailwind's `dark:` modifiers for seamless theme transitions.
-  - Custom `DropZone` components with drag-and-drop state handling.
+### 特性 2: 现代化深色 SaaS 界面
+- **总结**: 干净、专业的用户界面，具有磨砂玻璃效果、动态主题切换和流畅的动画。
+- **解决痛点**: 传统开源工具通常看起来过时或“工程师风味”太重。本工具提供了消费级的用户体验。
+- **功能细节**:
+  - **磨砂质感**: 带有 `backdrop-blur` 效果的半透明卡片。
+  - **动态主题**: 支持浅色、深色和跟随系统（自动）模式，可即时切换。
+  - **响应式设计**: 完全响应式布局，适配各种屏幕尺寸。
+- **技术实现**:
+  - 基于 **React** 和 **Tailwind CSS** 构建。
+  - 使用 CSS 变量和 Tailwind 的 `dark:` 修饰符实现无缝主题过渡。
+  - 自定义的 `DropZone` 组件，支持拖放状态处理。
 
-### Feature 3: Single Stream & Partial Merge Support
-- **Summary**: Flexibility to merge only video segments, only audio segments, or both.
-- **Problem Solved**: Users sometimes only have one track or want to fix a specific stream without processing the other.
-- **Feature Details**:
-  - The "Merge" button automatically enables if *any* valid input is detected.
-  - Smart logic detects missing inputs and adjusts the FFmpeg command to simple copy operations.
-- **Technical Implementation**:
-  - `App.tsx` validation logic checks `videoFiles.length || audioFiles.length`.
-  - `ffmpegService.ts` dynamically constructs the command args array based on input presence (e.g., omitting `-map 0:a` if no audio).
+### 特性 3: 单流与部分合并支持
+- **总结**: 灵活支持仅合并视频片段、仅合并音频片段或两者同时合并。
+- **解决痛点**: 用户有时只有一条轨道，或者只想处理特定流而不需要处理另一个。
+- **功能细节**:
+  - 只要检测到 *任何* 有效输入，“合并”按钮就会自动启用。
+  - 智能逻辑会检测缺失的输入，并将 FFmpeg 命令调整为简单的复制操作。
+- **技术实现**:
+  - `App.tsx` 验证逻辑检查 `videoFiles.length || audioFiles.length`。
+  - `ffmpegService.ts` 根据输入是否存在动态构建命令参数数组（例如，如果没有音频则省略 `-map 0:a`）。
 
-### Feature 4: Internationalization (i18n)
-- **Summary**: Full support for English and Simplified Chinese.
-- **Problem Solved**: Accessibility for both global users and the primary user base (Bilibili users often deal with M4S files).
-- **Feature Details**:
-  - One-click toggle between languages.
-  - All labels, helper texts, logs, and error messages are localized.
-- **Technical Implementation**:
-  - React state manages the current language key.
-  - A comprehensive `translations` object maps keys to localized strings.
-  - Local storage persistence for user language preference.
+### 特性 4: 国际化 (i18n) / 双语支持
+- **总结**: 全面支持英文和简体中文。
+- **解决痛点**: 方便全球用户以及主要用户群（Bilibili 用户经常处理 M4S 文件）使用。
+- **功能细节**:
+  - 一键切换语言。
+  - 所有标签、帮助文本、日志和错误消息均已本地化。
+- **技术实现**:
+  - React 状态管理当前语言键。
+  - 全面的 `translations` 对象将键映射到本地化字符串。
+  - 本地存储持久化用户语言偏好。
