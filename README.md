@@ -10,6 +10,9 @@
 
 ## 点开即用 : **https://m4s-merger-tools-web.vercel.app/**
 
+<img src="Presentation/Presentation%20Video%20-%20v1.0.0.gif" 
+     width="650"/>
+
 | 特性 | 描述 |
 | :--- | :--- |
 | **零安装** | 完全在浏览器中运行。无需下载 Python、FFmpeg 或 EXE 文件。 |
