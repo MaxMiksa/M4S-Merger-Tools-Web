@@ -11,7 +11,7 @@
 ## 🚀 Live Demo : **https://m4s-merger-tools-web.vercel.app/**
 
 <img src="Presentation/Presentation%20Video%20-%20v1.0.0.gif" 
-     width="650"/>
+     width="850"/>
 
 | Feature | Description |
 | :--- | :--- |
