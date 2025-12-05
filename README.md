@@ -1,4 +1,4 @@
-# M4S Merger Tool (Web) | [中文文档](README.md)
+# M4S Merger Tool (Web) | [中文文档](README-zh.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
