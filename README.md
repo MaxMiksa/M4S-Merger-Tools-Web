@@ -46,9 +46,10 @@
    
    1. **克隆仓库**
       ```bash
-      git clone https://github.com/MaxMiksa/M4S-Merger-Tools-Web.git
-      cd m4s-merger-pro
-      ```
+         git clone https://github.com/MaxMiksa/M4S-Merger-Tools-Web.git
+         cd M4S-Merger-Tool
+         ```
+      
    2. **安装依赖**
       ```bash
       npm install

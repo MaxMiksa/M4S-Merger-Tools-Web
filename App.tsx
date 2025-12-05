@@ -446,6 +446,7 @@ function App() {
         <div className="flex items-center justify-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
           <Sparkles size={14} className="text-brand-500" />
           <span className="font-medium">{t.heroTitle}</span>
+          <span className="text-xs bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-500 dark:text-slate-400">v1.0.0</span>
           <span>&copy; {new Date().getFullYear()}</span>
         </div>
         

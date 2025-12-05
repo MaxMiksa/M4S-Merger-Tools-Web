@@ -1,4 +1,4 @@
-# M4S Merger Tool (Web) | [English Doc](README-en.md)
+# M4S Merger Tool (Web) | [中文文档](README.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
@@ -46,9 +46,10 @@
    
    1. **Clone the Repository**
       ```bash
-      git clone https://github.com/MaxMiksa/M4S-Merger-Tools-Web.git
-      cd m4s-merger-pro
-      ```
+         git clone https://github.com/MaxMiksa/M4S-Merger-Tools-Web.git
+         cd M4S-Merger-Tool
+         ```
+      
    2. **Install Dependencies**
       ```bash
       npm install
