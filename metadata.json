@@ -1,0 +1,5 @@
+{
+  "name": "M4S Merger Pro",
+  "description": "A powerful web-based GUI to merge video and audio M4S files using local FFmpeg WebAssembly technology.",
+  "requestFramePermissions": []
+}
