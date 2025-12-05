@@ -45,7 +45,7 @@ class FFmpegService {
       throw new Error("FFmpeg not loaded");
     }
 
-    if (!videoFiles.length || !audioFiles.length) {
+    if (!videoFiles.length && !audioFiles.length) {
       throw new Error("No input files provided.");
     }
 
@@ -54,6 +54,10 @@ class FFmpegService {
     const cleanupTargets: string[] = [];
     const encoder = new TextEncoder();
 
+    // Calculate stage count based on inputs
+    // 1 stage for video concatenation (if > 1 file)
+    // 1 stage for audio concatenation (if > 1 file)
+    // 1 stage for final merge/processing
     const stageCount =
       (videoFiles.length > 1 ? 1 : 0) +
       (audioFiles.length > 1 ? 1 : 0) +
@@ -91,50 +95,72 @@ class FFmpegService {
     const buildConcatList = (names: string[]) =>
       names.map((name) => `file '${name.replace(/'/g, "'\\\\''")}'`).join('\n');
 
-    let videoInput = videoNames[0];
-    if (videoFiles.length > 1) {
-      const videoListName = `video_list_${Date.now()}.txt`;
-      this.ffmpeg.FS('writeFile', videoListName, encoder.encode(buildConcatList(videoNames)));
-      cleanupTargets.push(videoListName);
+    let videoInput: string | null = null;
+    if (videoNames.length > 0) {
+      videoInput = videoNames[0];
+      if (videoNames.length > 1) {
+        const videoListName = `video_list_${Date.now()}.txt`;
+        this.ffmpeg.FS('writeFile', videoListName, encoder.encode(buildConcatList(videoNames)));
+        cleanupTargets.push(videoListName);
 
-      const concatenatedVideo = `video_concat_${Date.now()}.mp4`;
-      await runStage([
-        '-f', 'concat',
-        '-safe', '0',
-        '-i', videoListName,
-        '-c', 'copy',
-        concatenatedVideo,
-      ]);
-      cleanupTargets.push(concatenatedVideo);
-      videoInput = concatenatedVideo;
+        const concatenatedVideo = `video_concat_${Date.now()}.mp4`;
+        await runStage([
+          '-f', 'concat',
+          '-safe', '0',
+          '-i', videoListName,
+          '-c', 'copy',
+          concatenatedVideo,
+        ]);
+        cleanupTargets.push(concatenatedVideo);
+        videoInput = concatenatedVideo;
+      }
     }
 
-    let audioInput = audioNames[0];
-    if (audioFiles.length > 1) {
-      const audioListName = `audio_list_${Date.now()}.txt`;
-      this.ffmpeg.FS('writeFile', audioListName, encoder.encode(buildConcatList(audioNames)));
-      cleanupTargets.push(audioListName);
+    let audioInput: string | null = null;
+    if (audioNames.length > 0) {
+      audioInput = audioNames[0];
+      if (audioNames.length > 1) {
+        const audioListName = `audio_list_${Date.now()}.txt`;
+        this.ffmpeg.FS('writeFile', audioListName, encoder.encode(buildConcatList(audioNames)));
+        cleanupTargets.push(audioListName);
 
-      const concatenatedAudio = `audio_concat_${Date.now()}.m4a`;
-      await runStage([
-        '-f', 'concat',
-        '-safe', '0',
-        '-i', audioListName,
-        '-c', 'copy',
-        concatenatedAudio,
-      ]);
-      cleanupTargets.push(concatenatedAudio);
-      audioInput = concatenatedAudio;
+        const concatenatedAudio = `audio_concat_${Date.now()}.m4a`;
+        await runStage([
+          '-f', 'concat',
+          '-safe', '0',
+          '-i', audioListName,
+          '-c', 'copy',
+          concatenatedAudio,
+        ]);
+        cleanupTargets.push(concatenatedAudio);
+        audioInput = concatenatedAudio;
+      }
     }
 
-    await runStage([
-      '-i', videoInput,
-      '-i', audioInput,
-      '-c:v', 'copy',
-      '-c:a', 'aac',
-      '-strict', 'experimental',
-      outputName,
-    ]);
+    // Construct final command
+    const finalArgs: string[] = [];
+    if (videoInput) {
+      finalArgs.push('-i', videoInput);
+    }
+    if (audioInput) {
+      finalArgs.push('-i', audioInput);
+    }
+
+    // If we have both, map streams. If only one, just copy.
+    // Note: simple copy logic. If you need strict mapping, adjust here.
+    // When both are present: -c:v copy -c:a aac
+    // When only video: -c:v copy
+    // When only audio: -c:a copy (or aac/mp3 depending on need, but copy is safest for m4s merge)
+    
+    if (videoInput && audioInput) {
+       finalArgs.push('-c:v', 'copy', '-c:a', 'aac', '-strict', 'experimental');
+    } else {
+       finalArgs.push('-c', 'copy'); 
+    }
+
+    finalArgs.push(outputName);
+
+    await runStage(finalArgs);
 
     const data = this.ffmpeg.FS('readFile', outputName);
     cleanupTargets.push(outputName);

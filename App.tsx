@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Layers, Download, RefreshCw, AlertCircle, PlayCircle, Settings2, Sun, Moon, Languages } from 'lucide-react';
+import { Layers, Download, RefreshCw, AlertCircle, PlayCircle, Settings2, Sun, Moon, Languages, Sparkles, Monitor } from 'lucide-react';
 import { DropZone } from './components/DropZone';
 import { LogViewer } from './components/LogViewer';
 import { ffmpegService } from './services/ffmpegService';
 import { ProcessingState, LogMessage, MergedFile } from './types';
 
 type Language = 'en' | 'zh';
-type Theme = 'dark' | 'light';
+type Theme = 'dark' | 'light' | 'system';
 
 interface Translation {
   heroTitle: string;
@@ -29,6 +29,7 @@ interface Translation {
     language: string;
     light: string;
     dark: string;
+    system: string;
   };
   logs: {
     title: string;
@@ -66,6 +67,7 @@ const translations: Record<Language, Translation> = {
       language: '中文 / English',
       light: 'Light mode',
       dark: 'Dark mode',
+      system: 'Follow System',
     },
     logs: {
       title: 'PROCESS LOGS',
@@ -101,6 +103,7 @@ const translations: Record<Language, Translation> = {
       language: '中文 / English',
       light: '浅色模式',
       dark: '深色模式',
+      system: '跟随系统',
     },
     logs: {
       title: '处理日志',
@@ -125,9 +128,9 @@ const getInitialLanguage = (): Language => {
 };
 
 const getInitialTheme = (): Theme => {
-  if (typeof window === 'undefined') return 'dark';
-  const stored = window.localStorage.getItem('theme');
-  return stored === 'light' ? 'light' : 'dark';
+  if (typeof window === 'undefined') return 'system';
+  const stored = window.localStorage.getItem('theme') as Theme | null;
+  return stored && ['dark', 'light', 'system'].includes(stored) ? stored : 'system';
 };
 
 function App() {
@@ -143,7 +146,28 @@ function App() {
   const t = translations[language];
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    const root = document.documentElement;
+    const applyTheme = (visualTheme: 'dark' | 'light') => {
+      if (visualTheme === 'dark') {
+        root.classList.add('dark');
+        root.setAttribute('data-theme', 'dark');
+      } else {
+        root.classList.remove('dark');
+        root.setAttribute('data-theme', 'light');
+      }
+    };
+
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      applyTheme(mediaQuery.matches ? 'dark' : 'light');
+
+      const handler = (e: MediaQueryListEvent) => applyTheme(e.matches ? 'dark' : 'light');
+      mediaQuery.addEventListener('change', handler);
+      return () => mediaQuery.removeEventListener('change', handler);
+    } else {
+      applyTheme(theme);
+    }
+
     if (typeof window !== 'undefined') {
       window.localStorage.setItem('theme', theme);
     }
@@ -165,7 +189,7 @@ function App() {
   }, []);
 
   const handleMerge = async () => {
-    if (!videoFiles.length || !audioFiles.length) return;
+    if (!videoFiles.length && !audioFiles.length) return;
 
     setState(ProcessingState.LOADING_CORE);
     setMergedFile(null);
@@ -229,164 +253,213 @@ function App() {
   };
 
   const isProcessing = state === ProcessingState.LOADING_CORE || state === ProcessingState.MERGING || state === ProcessingState.WRITING_FILES;
-  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  const hasFiles = videoFiles.length > 0 || audioFiles.length > 0;
+  
+  const cycleTheme = () => {
+    setTheme(prev => {
+      if (prev === 'system') return 'light';
+      if (prev === 'light') return 'dark';
+      return 'system';
+    });
+  };
+  
   const toggleLanguage = () => setLanguage(prev => prev === 'en' ? 'zh' : 'en');
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-brand-500 selection:text-white flex flex-col items-center py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans selection:bg-brand-500 selection:text-white flex flex-col items-center py-12 px-4 sm:px-6 relative overflow-hidden transition-colors duration-300">
       
+      {/* Ambient Background Effects */}
+      {/* Dark Mode Glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-brand-500/5 rounded-full blur-[120px] pointer-events-none hidden dark:block" />
+      <div className="absolute bottom-0 left-0 w-[800px] h-[600px] bg-indigo-900/10 rounded-full blur-[120px] pointer-events-none hidden dark:block" />
+      
+      {/* Light Mode Glows - Subtle Gradients */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-sky-200/20 rounded-full blur-[100px] pointer-events-none dark:hidden" />
+      <div className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-indigo-100/40 rounded-full blur-[100px] pointer-events-none dark:hidden" />
+
       {/* Header */}
-      <header className="w-full max-w-5xl mb-12">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-          <div className="flex flex-wrap gap-3 justify-end">
+      <header className="w-full max-w-5xl mb-16 relative z-10">
+        <div className="flex justify-end mb-8">
+          <div className="flex items-center gap-1 p-1.5 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-800/50 shadow-sm backdrop-blur-sm hover:shadow-md transition-all">
             <button
-              onClick={toggleTheme}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-800 bg-slate-900/50 text-slate-200 hover:border-brand-500 transition-colors"
+              onClick={cycleTheme}
+              className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-all"
+              aria-label="Toggle Theme"
+              title={theme === 'system' ? t.toggles.system : (theme === 'dark' ? t.toggles.dark : t.toggles.light)}
             >
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-              <span>{theme === 'dark' ? t.toggles.light : t.toggles.dark}</span>
+              {theme === 'system' ? (
+                <Monitor size={20} strokeWidth={1.5} />
+              ) : theme === 'dark' ? (
+                <Moon size={20} strokeWidth={1.5} />
+              ) : (
+                <Sun size={20} strokeWidth={1.5} />
+              )}
             </button>
+            <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1" />
             <button
               onClick={toggleLanguage}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-800 bg-slate-900/50 text-slate-200 hover:border-brand-500 transition-colors"
+              className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-all"
+              aria-label="Toggle Language"
+              title={t.toggles.language}
             >
-              <Languages size={16} />
-              <span>{t.toggles.language}</span>
+              <Languages size={20} strokeWidth={1.5} />
             </button>
           </div>
         </div>
 
-        <div className="text-center mt-6">
-          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 shadow-2xl mb-6">
-            <Layers className="text-brand-500 w-8 h-8" />
+        <div className="text-center pt-2">
+          <div className="inline-flex items-center justify-center p-4 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/50 shadow-xl ring-4 ring-slate-50 dark:ring-slate-900/50 mb-8 backdrop-blur-xl">
+            <Layers className="text-brand-500 w-10 h-10" strokeWidth={1.5} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400 mb-4 tracking-tight">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-b dark:from-white dark:via-slate-200 dark:to-slate-400 mb-6 tracking-tight">
             {t.heroTitle}
           </h1>
-          <p className="text-slate-400 max-w-lg mx-auto text-lg">
+          <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto text-lg leading-relaxed">
             {t.heroSubtitle}
           </p>
         </div>
       </header>
 
       {/* Main Card */}
-      <main className="w-full max-w-5xl bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl ring-1 ring-white/5">
-        
-        {/* Step 1: File Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 mb-8">
-          <DropZone 
-            label={t.dropzones.videoLabel} 
-            helperText={t.dropzones.helper}
-            addMoreLabel={t.dropzones.addMore}
-            addMoreHint={t.dropzones.addHint}
-            clearLabel={t.dropzones.clear}
-            accept=".m4s,.mp4"
-            icon="video"
-            files={videoFiles} 
-            onFilesAdd={(incoming) => setVideoFiles(prev => [...prev, ...incoming])} 
-            onRemoveFile={(index) => setVideoFiles(prev => prev.filter((_, i) => i !== index))}
-            onClear={() => setVideoFiles([])}
-            disabled={isProcessing}
-          />
-          <DropZone 
-            label={t.dropzones.audioLabel} 
-            helperText={t.dropzones.helper}
-            addMoreLabel={t.dropzones.addMore}
-            addMoreHint={t.dropzones.addHint}
-            clearLabel={t.dropzones.clear}
-            accept=".m4s,.m4a,.mp3"
-            icon="audio"
-            files={audioFiles} 
-            onFilesAdd={(incoming) => setAudioFiles(prev => [...prev, ...incoming])} 
-            onRemoveFile={(index) => setAudioFiles(prev => prev.filter((_, i) => i !== index))}
-            onClear={() => setAudioFiles([])}
-            disabled={isProcessing}
-          />
-        </div>
+      <main className="w-full max-w-5xl relative z-10">
+        <div className="bg-white/60 dark:bg-slate-900/50 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800 rounded-3xl p-6 md:p-10 shadow-2xl shadow-slate-200/50 dark:shadow-none ring-1 ring-black/5 dark:ring-white/5">
+          
+          {/* Step 1: File Selection */}
+          <div className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 mb-8">
+            <DropZone 
+              label={t.dropzones.videoLabel} 
+              helperText={t.dropzones.helper}
+              addMoreLabel={t.dropzones.addMore}
+              addMoreHint={t.dropzones.addHint}
+              clearLabel={t.dropzones.clear}
+              accept=".m4s,.mp4"
+              icon="video"
+              files={videoFiles} 
+              onFilesAdd={(incoming) => setVideoFiles(prev => [...prev, ...incoming])} 
+              onRemoveFile={(index) => setVideoFiles(prev => prev.filter((_, i) => i !== index))}
+              onClear={() => setVideoFiles([])}
+              disabled={isProcessing}
+            />
+            <DropZone 
+              label={t.dropzones.audioLabel} 
+              helperText={t.dropzones.helper}
+              addMoreLabel={t.dropzones.addMore}
+              addMoreHint={t.dropzones.addHint}
+              clearLabel={t.dropzones.clear}
+              accept=".m4s,.m4a,.mp3"
+              icon="audio"
+              files={audioFiles} 
+              onFilesAdd={(incoming) => setAudioFiles(prev => [...prev, ...incoming])} 
+              onRemoveFile={(index) => setAudioFiles(prev => prev.filter((_, i) => i !== index))}
+              onClear={() => setAudioFiles([])}
+              disabled={isProcessing}
+            />
+          </div>
 
-        {/* Step 2: Actions & Progress */}
-        <div className="space-y-6">
-          {/* Progress Bar (Visible when processing) */}
-          {(isProcessing || state === ProcessingState.COMPLETED) && (
-            <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-              <div 
-                className="bg-brand-500 h-full transition-all duration-300 ease-out"
-                style={{ width: `${state === ProcessingState.LOADING_CORE ? 10 : Math.max(10, progress)}%` }}
-              />
-            </div>
-          )}
+          {/* Step 2: Actions & Progress */}
+          <div className="space-y-8">
+            {/* Progress Bar */}
+            {(isProcessing || state === ProcessingState.COMPLETED) && (
+              <div className="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden">
+                <div 
+                  className="bg-brand-500 h-full transition-all duration-300 ease-out shadow-[0_0_10px_rgba(14,165,233,0.5)]"
+                  style={{ width: `${state === ProcessingState.LOADING_CORE ? 10 : Math.max(10, progress)}%` }}
+                />
+              </div>
+            )}
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-             <div className="flex items-center gap-2 text-sm text-slate-500">
-                <Settings2 size={16} />
-                <span>{t.formatLabel}</span>
-             </div>
+            {/* Action Buttons */}
+            <div className="flex flex-col xl:flex-row gap-8 items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800/50">
+               
+               {/* Format Label */}
+               <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/50 w-full xl:w-auto">
+                  <div className="p-2 rounded-lg bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 shadow-sm">
+                    <Settings2 size={18} />
+                  </div>
+                  <span className="text-base font-medium text-slate-600 dark:text-slate-300 truncate">{t.formatLabel}</span>
+               </div>
 
-             <div className="flex gap-4 w-full sm:w-auto">
-                {state === ProcessingState.COMPLETED ? (
-                  <>
-                    <button 
-                      onClick={handleReset}
-                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 text-slate-100 border border-slate-800 shadow-lg hover:bg-slate-800 transition-all hover:scale-105"
+               <div className="flex gap-4 w-full xl:w-auto justify-end">
+                  {state === ProcessingState.COMPLETED ? (
+                    <>
+                      <button 
+                        onClick={handleReset}
+                        className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-slate-100 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all hover:scale-[1.02] active:scale-[0.98] font-semibold text-lg min-w-[160px]"
+                      >
+                        <RefreshCw size={20} />
+                        {t.startOver}
+                      </button>
+                      <a 
+                        href={mergedFile?.url} 
+                        download={mergedFile?.name}
+                        className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-900/20 ring-1 ring-white/10 transition-all hover:scale-[1.02] active:scale-[0.98] text-lg min-w-[200px]"
+                      >
+                        <Download size={20} />
+                        {t.download}
+                      </a>
+                    </>
+                  ) : (
+                    <button
+                      onClick={handleMerge}
+                      disabled={!hasFiles || isProcessing}
+                      className={`
+                        w-full xl:w-auto flex items-center justify-center gap-3 px-10 py-4 rounded-xl font-bold text-lg shadow-lg transition-all ring-1 ring-white/10 min-w-[200px]
+                        ${!hasFiles || isProcessing
+                          ? 'bg-slate-200 dark:bg-slate-800/50 text-slate-400 dark:text-slate-600 border border-slate-300 dark:border-slate-800 cursor-not-allowed shadow-none'
+                          : 'bg-brand-600 hover:bg-brand-500 text-white shadow-brand-900/20 hover:scale-[1.02] active:scale-[0.98]'
+                        }
+                      `}
                     >
-                      <RefreshCw size={18} />
-                      {t.startOver}
+                      {isProcessing ? (
+                        <>
+                          <RefreshCw size={20} className="animate-spin" />
+                          {t.processingLabel}
+                        </>
+                      ) : (
+                        <>
+                          <PlayCircle size={20} className="fill-current" />
+                          {t.mergeButton}
+                        </>
+                      )}
                     </button>
-                    <a 
-                      href={mergedFile?.url} 
-                      download={mergedFile?.name}
-                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-green-600 hover:bg-green-500 text-white font-semibold shadow-lg shadow-green-900/20 transition-all hover:scale-105"
-                    >
-                      <Download size={18} />
-                      {t.download}
-                    </a>
-                  </>
-                ) : (
-                  <button
-                    onClick={handleMerge}
-                    disabled={!videoFiles.length || !audioFiles.length || isProcessing}
-                    className={`
-                      w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-semibold shadow-lg transition-all
-                      ${!videoFiles.length || !audioFiles.length || isProcessing
-                        ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                        : 'bg-brand-600 hover:bg-brand-500 text-white shadow-brand-900/20 hover:scale-105'
-                      }
-                    `}
-                  >
-                    {isProcessing ? (
-                      <>
-                        <RefreshCw size={18} className="animate-spin" />
-                        {t.processingLabel}
-                      </>
-                    ) : (
-                      <>
-                        <PlayCircle size={18} />
-                        {t.mergeButton}
-                      </>
-                    )}
-                  </button>
-                )}
+                  )}
+               </div>
+            </div>
+          </div>
+
+          {/* Logs Area */}
+          <div className="mt-12">
+             <LogViewer logs={logs} title={t.logs.title} emptyMessage={t.logs.waiting} />
+             
+             {/* Privacy Notice */}
+             <div className="mt-6 flex items-start gap-3 text-sm text-slate-500 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/30 p-5 rounded-xl border border-slate-200 dark:border-slate-800/50">
+                <AlertCircle size={18} className="mt-0.5 shrink-0 text-slate-400" />
+                <p className="leading-relaxed">
+                  {t.privacy}
+                </p>
              </div>
           </div>
         </div>
-
-        {/* Logs Area */}
-        <div className="mt-8 pt-8 border-t border-slate-800">
-           <LogViewer logs={logs} title={t.logs.title} emptyMessage={t.logs.waiting} />
-           
-           {/* Privacy Notice */}
-           <div className="mt-4 flex items-start gap-2 text-xs text-slate-500 bg-slate-900/50 p-3 rounded-lg border border-slate-800/50">
-              <AlertCircle size={14} className="mt-0.5 shrink-0" />
-              <p>
-                {t.privacy}
-              </p>
-           </div>
-        </div>
       </main>
       
-      <footer className="mt-12 text-slate-600 text-sm text-center">
-        {t.heroTitle} &copy; {new Date().getFullYear()}
+      <footer className="mt-16 pb-8 text-slate-500 dark:text-slate-600 text-sm text-center relative z-10 space-y-4">
+        <div className="flex items-center justify-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
+          <Sparkles size={14} className="text-brand-500" />
+          <span className="font-medium">{t.heroTitle}</span>
+          <span>&copy; {new Date().getFullYear()}</span>
+        </div>
+        
+        <div className="flex flex-col items-center gap-2 text-xs opacity-60 hover:opacity-90 transition-opacity">
+           <p>Created by <span className="font-medium text-slate-700 dark:text-slate-400">Zheyuan (Max) Kong</span></p>
+           <a 
+             href="https://github.com/MaxMiksa/M4S-Merger-Tools-Web.git" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             className="hover:text-brand-600 dark:hover:text-brand-400 hover:underline decoration-brand-500/30 underline-offset-4 transition-all"
+           >
+             https://github.com/MaxMiksa/M4S-Merger-Tools-Web.git
+           </a>
+        </div>
       </footer>
     </div>
   );
