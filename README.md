@@ -1,4 +1,4 @@
-# M4S 合并工具 (Web) | [English Documentation](README-en.md)
+# M4S 合并工具 (Web) | [English Doc](README-en.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
