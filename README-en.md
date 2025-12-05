@@ -1,4 +1,4 @@
-# M4S Merger Tools (Web) | [中文文档](README_ZH.md)
+# M4S Merger Tools (Web) | [中文文档](README.md)
 
 **A modern, browser-based tool for merging segmented `.m4s` video and audio streams instantly.**
 
