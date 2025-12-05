@@ -1,71 +1,80 @@
-# M4S Merger Tools (Web) | [中文文档](README_ZH.md)
-
-**A modern, browser-based tool for merging segmented `.m4s` video and audio streams instantly.**
-
-Powered by **FFmpeg WASM**, **React**, and **Tailwind CSS**. No installation required. No data upload. Secure and private.
+# M4S Merger Tool (Web) | [English Doc](README-en.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.0-38bdf8.svg)
-![FFmpeg](https://img.shields.io/badge/FFmpeg-WASM-005900.svg)
+![FFmpeg](https://img.shields.io/badge/FFmpeg-WASM-005900.svg)     
+**No Installation Required | No Data Upload | Bilingual (CN/EN) | Fast & Free**
 
-## ✨ Features
+**A modern, browser-based tool for instantly merging fragmented `.m4s` video and audio streams.**
+
+## 🚀 Live Demo : **https://m4s-merger-tools-web.vercel.app/**
 
 | Feature | Description |
 | :--- | :--- |
-| 🚀 **Zero Installation** | Runs entirely in your browser. No Python, FFmpeg, or EXE downloads needed. |
-| 🔒 **Privacy First** | Files are processed locally using WebAssembly. Your media never leaves your device. |
-| 🎨 **Modern UI** | Beautiful "Dark SaaS" aesthetic with Glassmorphism. Supports **Light**, **Dark**, and **System** themes. |
-| 🎞️ **Flexible Merging** | Merge video segments, audio segments, or mux them together into a final MP4. |
-| 🌐 **Bilingual** | Full support for English and Simplified Chinese (interface & logs). |
-| ⚡ **Fast Processing** | Uses "Copy Codec" mode for lightning-fast merging without re-encoding. |
+| **Zero Installation** | Runs entirely in the browser. No need to download Python, FFmpeg, or executable files. |
+| **Privacy First** | Files are processed locally using WebAssembly. Your media never leaves your device. |
+| **Modern UI/UX** | Features an elegant "Dark SaaS" style with a frosted glass aesthetic. Supports **Light**, **Dark**, and **System Default** themes. |
+| **Flexible Merging** | Supports merging video fragments, audio fragments separately, or muxing them into the final MP4. |
+| **Bilingual Support** | Full support for Simplified Chinese and English (UI and logs). |
+| **Blazing Fast Processing** | Uses "copy encoding" mode for extremely fast merging without re-encoding. |
 
-## 🚀 Quick Start
 
-### Online Version
-(Deploy your project to Vercel/Netlify/GitHub Pages and add link here)
-> *Coming Soon*
+## Other Information
+   
+<details>
+   <summary>1. Requirements & Limitations</summary>
+   
+   - **Browser**: Requires a modern browser (Chrome, Edge, Firefox).
+   - **SharedArrayBuffer**: The server hosting this application must send the `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` response headers for FFmpeg WASM to function correctly.
+   - **Memory**: Merging very large files may consume significant RAM, as the files need to be loaded into browser memory.
+   
+</details>
 
-### Local Development
+<details>
+   <summary>2. Development Stack</summary>
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/MaxMiksa/M4S-Merger-Tools-Web.git
-   cd m4s-merger-pro
-   ```
+   - **Frontend**: React 19, TypeScript
+   - **Styling**: Tailwind CSS v3, Lucide React (Icons)
+   - **Core Engine**: FFmpeg.wasm (WebAssembly)
+   - **Build Tool**: Vite
+   
+</details>
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+<details>
+   <summary>3. Developer Guide</summary>
+   
+   1. **Clone the Repository**
+      ```bash
+      git clone https://github.com/MaxMiksa/M4S-Merger-Tools-Web.git
+      cd m4s-merger-pro
+      ```
+   2. **Install Dependencies**
+      ```bash
+      npm install
+      ```
+   3. **Start the Development Server**
+      ```bash
+      npm run dev
+      ```
+   4. **Open in Browser**
+      Visit `http://localhost:5173` (or the port displayed in the terminal).
+      
+</details>
 
-3. **Start the dev server**
-   ```bash
-   npm run dev
-   ```
+<details>
+   <summary>4. License</summary>
+   
+   This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+   
+</details>
 
-4. **Open in browser**
-   Navigate to `http://localhost:5173` (or the port shown in your terminal).
+## 🤝 Contribution & Contact
 
-## 🛠️ Tech Stack
+Issues and Pull Requests are welcome!  
+For any questions or suggestions, please contact Zheyuan (Max) Kong (Carnegie Mellon University, Pittsburgh, PA).
 
-- **Frontend**: React 19, TypeScript
-- **Styling**: Tailwind CSS v3, Lucide React (Icons)
-- **Core Engine**: FFmpeg.wasm (WebAssembly)
-- **Build Tool**: Vite
+Welcome to submit Issues and Pull Requests!  
+Any questions or suggestions? Please contact Max Kong (Carnegie Mellon University, Pittsburgh, PA).
 
-## ⚠️ Requirements & Limitations
-
-- **Browser**: A modern browser (Chrome, Edge, Firefox) is required.
-- **SharedArrayBuffer**: The server serving this app must send `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` headers for FFmpeg WASM to work.
-- **Memory**: Merging very large files might consume significant RAM as files are loaded into the browser memory.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 Contact
-
-Created by **Zheyuan (Max) Kong**  
-Carnegie Mellon University, Pittsburgh, PA  
-Email: [kongzheyuan@outlook.com](mailto:kongzheyuan@outlook.com) | [zheyuank@andrew.cmu.edu](mailto:zheyuank@andrew.cmu.edu)
+Zheyuan (Max) Kong: kongzheyuan@outlook.com | zheyuank@andrew.cmu.edu
