@@ -4,11 +4,15 @@
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.0-38bdf8.svg)
 ![FFmpeg](https://img.shields.io/badge/FFmpeg-WASM-005900.svg)     
-**No Installation Required | No Data Upload | Bilingual (CN/EN) | Fast & Free**
 
-**A modern, browser-based tool for instantly merging fragmented `.m4s` video and audio streams.**
+✅ **No Installation (Click-to-use) | No Data Upload | Bilingual (CN/EN) | Fast & Free**  
+✅ **Video Merging | Audio Merging | Audio & Video Muxing**  
+✅ **.M4S | .MP4 | .MP3**   
 
-## 🚀 Live Demo : **https://m4s-merger-tools-web.vercel.app/**
+ - 🌐 **Online** Version (Click-to-Use) ➡️ This Repo | https://github.com/MaxMiksa/M4S-Merger-Tools-Web
+ - 🖥️ **Offline** Version (10x Faster) ➡️ Desktop Counterpart | https://github.com/MaxMiksa/M4S-Merger-Tools
+
+## 🚀  Web Application : **https://m4s-merger-tools-web.vercel.app/**
 
 <img src="Presentation/Presentation%20Video%20-%20v1.0.0.gif" 
      width="850"/>
