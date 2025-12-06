@@ -1,7 +1,7 @@
 {
   "name": "m4s-merger-tool",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A modern web-based tool for merging .m4s video and audio segments using FFmpeg WASM.",
   "author": "Zheyuan (Max) Kong",
   "repository": {

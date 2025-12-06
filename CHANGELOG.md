@@ -1,5 +1,19 @@
 # Changelog | [中文版本](CHANGELOG_ZH.md)
 
+## v2.0.0 – Performance & Reliability Update (2025年12月6日)
+
+### Enhanced Feature: Intelligent M4S Merging
+- **Summary**: Implemented an intelligent merging strategy to significantly boost performance while ensuring compatibility and reliability for M4S video and audio streams.
+- **Problem Solved**: Addresses the primary performance bottleneck of unnecessary audio re-encoding, dramatically speeding up the merging process. Provides a robust fallback mechanism for maximum compatibility.
+- **Feature Details**:
+  - **Prioritized Fast Mode**: The tool now first attempts a full stream copy (`-c copy`) for both video and audio. This leverages the pre-encoded nature of most M4S streams for near-instantaneous merging.
+  - **Automatic Fallback**: If the fast stream copy mode encounters a compatibility issue (e.g., an unusual audio codec), it gracefully falls back to a safer re-encoding mode (`-c:v copy -c:a 'aac' -strict experimental`) to ensure the merge completes successfully.
+  - **Improved User Experience**: Users benefit from significantly faster merges for compatible files, with seamless handling of edge cases without manual intervention.
+- **Technical Implementation**:
+  - Modified `ffmpegService.ts::mergeFiles` to include a `try-catch` block around the FFmpeg `run` command.
+  - First attempt uses `['-c', 'copy']`.
+  - On failure, a second attempt is made with `['-c:v', 'copy', '-c:a', 'aac', '-strict', 'experimental']` (if both video and audio inputs exist).
+
 ## v1.0.0 – Initial Web Release
 
 ### Feature 1: Browser-Based Processing

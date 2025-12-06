@@ -146,21 +146,41 @@ class FFmpegService {
       finalArgs.push('-i', audioInput);
     }
 
-    // If we have both, map streams. If only one, just copy.
-    // Note: simple copy logic. If you need strict mapping, adjust here.
-    // When both are present: -c:v copy -c:a aac
-    // When only video: -c:v copy
-    // When only audio: -c:a copy (or aac/mp3 depending on need, but copy is safest for m4s merge)
+    // Optimization: Try to copy both streams first (Fastest).
+    // If that fails, fallback to re-encoding audio (Safest).
     
-    if (videoInput && audioInput) {
-       finalArgs.push('-c:v', 'copy', '-c:a', 'aac', '-strict', 'experimental');
-    } else {
-       finalArgs.push('-c', 'copy'); 
+    let mergeSuccess = false;
+
+    // Attempt 1: Full Stream Copy
+    try {
+      console.log("Attempting merge with Stream Copy (Fast Mode)...");
+      const fastArgs = [...finalArgs, '-c', 'copy', outputName];
+      await runStage(fastArgs);
+      mergeSuccess = true;
+    } catch (e) {
+      console.warn("Stream Copy merge failed, falling back to re-encoding audio...", e);
+      
+      // Cleanup failed output if it exists partially
+      try {
+        this.ffmpeg.FS('unlink', outputName);
+      } catch (unlinkErr) {
+        // Ignore unlink error if file didn't exist
+      }
     }
 
-    finalArgs.push(outputName);
-
-    await runStage(finalArgs);
+    // Attempt 2: Fallback (Re-encode Audio)
+    if (!mergeSuccess) {
+      console.log("Attempting merge with Audio Re-encoding (Compatibility Mode)...");
+      const safeArgs = [...finalArgs];
+      if (videoInput && audioInput) {
+         safeArgs.push('-c:v', 'copy', '-c:a', 'aac', '-strict', 'experimental');
+      } else {
+         // Should rarely reach here if simple copy failed, but good for safety
+         safeArgs.push('-c', 'copy'); 
+      }
+      safeArgs.push(outputName);
+      await runStage(safeArgs);
+    }
 
     const data = this.ffmpeg.FS('readFile', outputName);
     cleanupTargets.push(outputName);

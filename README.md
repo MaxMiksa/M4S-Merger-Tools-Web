@@ -20,7 +20,7 @@
 | **Modern UI/UX** | Features an elegant "Dark SaaS" style with a frosted glass aesthetic. Supports **Light**, **Dark**, and **System Default** themes. |
 | **Flexible Merging** | Supports merging video fragments, audio fragments separately, or muxing them into the final MP4. |
 | **Bilingual Support** | Full support for Simplified Chinese and English (UI and logs). |
-| **Blazing Fast Processing** | Uses "copy encoding" mode for extremely fast merging without re-encoding. |
+| **Blazing Fast Processing** | **v2.0.0 Upgrade**: Intelligent Stream Copy technology, boosting speed by **10x+**. Defaults to Copy mode with automatic fallback for compatibility. |
 
 
 ## Other Information
