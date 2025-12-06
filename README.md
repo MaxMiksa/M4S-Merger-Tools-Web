@@ -4,9 +4,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.0-38bdf8.svg)
 ![FFmpeg](https://img.shields.io/badge/FFmpeg-WASM-005900.svg)
-[![Vercel Deploy](https://vercel.com/button?project-id=prj_mWqfgbJr0KSXyGdGtCfyM8Hjbn6o&button-logo=vercel&button-text=Deploy%20to%20Vercel)](https://vercel.com/new/clone?repository-url=https://github.com/MaxMiksa/M4S-Merger-Tools-Web)
-
-[![Vercel Deployment Status](https://vercel.com/maxs-projects-5a61cfa3/m4s-merger-tools-web/status)](https://vercel.com/maxs-projects-5a61cfa3/m4s-merger-tools-web)     
+[![Vercel Deploy](https://vercel.com/button?project-id=prj_mWqfgbJr0KSXyGdGtCfyM8Hjbn6o&button-logo=vercel&button-text=Deploy%20to%20Vercel)](https://vercel.com/new/clone?repository-url=https://github.com/MaxMiksa/M4S-Merger-Tools-Web)     
 
 ✅ **No Installation (Click-to-use) | No Data Upload | Bilingual (CN/EN) | Fast & Free**  
 ✅ **Video Merging | Audio Merging | Audio & Video Muxing**  
