@@ -3,7 +3,10 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.0-38bdf8.svg)
-![FFmpeg](https://img.shields.io/badge/FFmpeg-WASM-005900.svg)     
+![FFmpeg](https://img.shields.io/badge/FFmpeg-WASM-005900.svg)
+[![部署到 Vercel](https://vercel.com/button?repo-url=https://github.com/MaxMiksa/M4S-Merger-Tools-Web&button-logo=vercel&button-text=部署到%20Vercel)](https://vercel.com/new/clone?repository-url=https://github.com/MaxMiksa/M4S-Merger-Tools-Web)
+
+[![Vercel 部署状态](https://vercel.com/MaxMiksa/M4S-Merger-Tools-Web/status)](https://vercel.com/MaxMiksa/M4S-Merger-Tools-Web/deploy)     
 
 ✅ 无需安装（即点即用）| 无需上传数据 | 双语支持（中/英）| 快速且免费  
 ✅ 视频合并 | 音频合并 | 音视频混流  
