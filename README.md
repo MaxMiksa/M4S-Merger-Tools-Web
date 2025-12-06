@@ -12,7 +12,7 @@
  - 🌐 **Online** Version (Click-to-Use) ➡️ This Repo | https://github.com/MaxMiksa/M4S-Merger-Tools-Web
  - 🖥️ **Offline** Version (10x Faster) ➡️ Desktop Counterpart | https://github.com/MaxMiksa/M4S-Merger-Tools
 
-## 🚀  Web Application : **https://m4s-merger-tools-web.vercel.app/**
+## 🚀  Web : **https://m4s-merger-tools-web.vercel.app/**
 
 <img src="Presentation/Presentation%20Video%20-%20v1.0.0.gif" 
      width="850"/>
