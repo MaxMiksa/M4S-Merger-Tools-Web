@@ -1,17 +1,21 @@
-# M4S 合并工具 (Web) | [English Doc](README-en.md)
+# M4S 合并工具 (Web) | [English Doc](README.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.0-38bdf8.svg)
 ![FFmpeg](https://img.shields.io/badge/FFmpeg-WASM-005900.svg)     
-**无需安装 | 无数据上传 | 中英双语 | 快速免费**
 
-**一款现代化的浏览器端工具，用于即时合并分段的 `.m4s` 视频和音频流。**
+✅ 无需安装（即点即用）| 无需上传数据 | 双语支持（中/英）| 快速且免费  
+✅ 视频合并 | 音频合并 | 音视频混流  
+✅ .M4S | .MP4 | .MP3  
 
-## 点开即用 : **https://m4s-merger-tools-web.vercel.app/**
+🌐 在线版（即点即用） ➡️ 本仓库 | https://github.com/MaxMiksa/M4S-Merger-Tools-Web  
+🖥️ 离线版（速度快10倍） ➡️ 桌面对应版本 | https://github.com/MaxMiksa/M4S-Merger-Tools  
+
+## 🚀 点开即用 : **https://m4s-merger-tools-web.vercel.app/**
 
 <img src="Presentation/Presentation%20Video%20-%20v1.0.0.gif" 
-     width="650"/>
+     width="850"/>
 
 | 特性 | 描述 |
 | :--- | :--- |
