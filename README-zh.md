@@ -13,8 +13,7 @@
 ✅ .M4S | .MP4 | .MP3  
 
 🌐 在线版（即点即用） ➡️ 本仓库 | https://github.com/MaxMiksa/M4S-Merger-Tools-Web  
-🖥️ 离线版（Portable with you） ➡️ 桌面对应版本 | https://github.com/MaxMiksa/M4S-Merger-Tools  
-
+ 🖥️ 离线版（Portable） ➡️ 桌面对应版本 | https://github.com/MaxMiksa/M4S-Merger-Tools  
 ## 🚀 点开即用 : **https://m4s-merger-tools-web.vercel.app/**
 
 <img src="Presentation/Presentation%20Video%20-%20v1.0.0.gif" 

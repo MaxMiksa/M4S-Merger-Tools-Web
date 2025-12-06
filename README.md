@@ -13,7 +13,7 @@
 ✅ **.M4S | .MP4 | .MP3**   
 
  - 🌐 **Online** Version (Click-to-Use) ➡️ This Repo | https://github.com/MaxMiksa/M4S-Merger-Tools-Web
- - 🖥️ **Offline** Version (Portable with you) ➡️ Desktop Counterpart | https://github.com/MaxMiksa/M4S-Merger-Tools
+ - 🖥️ **Offline** Version (Portable) ➡️ Desktop Counterpart | https://github.com/MaxMiksa/M4S-Merger-Tools
 
 ## 🚀  Web : **https://m4s-merger-tools-web.vercel.app/**
 
