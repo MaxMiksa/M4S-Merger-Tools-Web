@@ -42,10 +42,22 @@
 <details>
    <summary>2. Development Stack</summary>
 
-   - **Frontend**: React 19, TypeScript
-   - **Styling**: Tailwind CSS v3, Lucide React (Icons)
-   - **Core Engine**: FFmpeg.wasm (WebAssembly)
-   - **Build Tool**: Vite
+   **Packages & Frameworks:**
+   * **Core Framework:** React 19 (`react`, `react-dom`)
+   * **Build Tool:** Vite (`vite`)
+   * **Styling:** Tailwind CSS v3 (`tailwindcss`), PostCSS (`postcss`), Autoprefixer (`autoprefixer`)
+   * **Language:** TypeScript (`typescript`)
+   * **Icons:** Lucide React (`lucide-react`)
+
+   **Interfaces & Services:**
+   * **FFmpeg WASM:** The project uses the WebAssembly version of FFmpeg for in-browser video/audio processing.
+       * Core files are located in `public/scripts/ffmpeg/` (`ffmpeg.min.js`, `ffmpeg-core.js`, etc.).
+       * The service is encapsulated in `services/ffmpegService.ts`, providing methods like `load()` (load FFmpeg) and `mergeFiles()` (merge video/audio).
+       * It interacts via the global `window.FFmpeg` object (typical usage for FFmpeg WASM v0.11.x or similar versions).
+
+   **Languages:**
+   * **TypeScript:** (`.ts`, `.tsx`) Primary development language.
+   * **HTML/CSS:** (`.html`, `.css`) Basic structure and styling.
    
 </details>
 

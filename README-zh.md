@@ -41,10 +41,22 @@
 <details>
    <summary>2. 开发与对应技术栈</summary>
 
-   - **前端**: React 19, TypeScript
-   - **样式**: Tailwind CSS v3, Lucide React (图标)
-   - **核心引擎**: FFmpeg.wasm (WebAssembly)
-   - **构建工具**: Vite
+   **主要包与框架 (Packages & Frameworks):**
+   * **核心框架:** React 19 (`react`, `react-dom`)
+   * **构建工具:** Vite (`vite`)
+   * **样式:** Tailwind CSS v3 (`tailwindcss`), PostCSS (`postcss`), Autoprefixer (`autoprefixer`)
+   * **语言:** TypeScript (`typescript`)
+   * **图标库:** Lucide React (`lucide-react`)
+
+   **接口与服务 (Interfaces & Services):**
+   * **FFmpeg WASM:** 项目使用 FFmpeg 的 WebAssembly 版本进行浏览器端的视频/音频处理。
+       * 核心文件位于 `public/scripts/ffmpeg/` (`ffmpeg.min.js`, `ffmpeg-core.js` 等)。
+       * 服务封装在 `services/ffmpegService.ts` 中，提供 `load()` (加载 FFmpeg) 和 `mergeFiles()` (合并视频/音频) 等方法。
+       * 它通过 `window.FFmpeg` 全局对象进行交互 (典型的 FFmpeg WASM v0.11.x 或类似版本的用法)。
+
+   **语言 (Languages):**
+   * **TypeScript:** (`.ts`, `.tsx`) 主要开发语言。
+   * **HTML/CSS:** (`.html`, `.css`) 基础结构和样式。
    
 </details>
 
