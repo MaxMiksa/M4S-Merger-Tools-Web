@@ -26,3 +26,6 @@ dist-ssr
 GUIDE_for_Update/
 
 AI_RELEASE_RULES.md
+
+# Local-only workspace files
+Files/
